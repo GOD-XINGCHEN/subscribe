@@ -4,7 +4,7 @@ services:
     image: tindy2013/subconverter:latest
     container_name: subconverter
     ports:
-      - "15000:25500"
+      - "4397:25500"
     restart: always
     volumes:
       - ./replacements/config/custom.ini:/base/config/custom.ini
