@@ -1,0 +1,10 @@
+version: '1'
+services:
+  subconverter:
+    image: tindy2013/subconverter:latest
+    container_name: subconverter
+    ports:
+      - "15000:25500"
+    restart: always
+    volumes:
+      - ./replacements/config/custom.ini:/base/config/custom.ini
