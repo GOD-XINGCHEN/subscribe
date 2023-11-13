@@ -1,0 +1,56 @@
+name: Deploy Subscribe
+
+on:
+  # 手动触发
+  workflow_dispatch:
+#  push:
+#    branches: [ main ]
+#  pull_request:
+#    branches: [ main ]
+
+jobs:
+  build:
+    # 使用ubuntu系统镜像运行自动化脚本
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # 切换分支
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      #      # 下载 git submodule
+      #      - uses: srt32/git-actions@v0.0.3
+      #        with:
+      #          args: git submodule update --init --recursive
+
+      # tar
+      - name: Tar dist
+        run: tar zcf build.tar.gz replacements docker-compose.yaml
+
+      # Deploy to server
+      - name: Deploy to server
+        id: deploy
+        uses: Pendect/action-rsyncer@v1.1.0
+        env:
+          DEPLOY_KEY: ${{secrets.ACCESS_TOKEN}}
+        with:
+          flags: '-avzr --delete'
+          options: ''
+          ssh_options: ''
+          src: 'build.tar.gz'
+          dest: '${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/wwwroot/subscribe'
+
+      # 远程Command
+      - name: Command
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.ACCESS_TOKEN }}
+          script: |
+            cd /wwwroot/subscribe
+            tar zxf build.tar.gz
+            rm build.tar.gz
+            docker-compose pull && docker-compose up -d
+            echo "Complete!!!"
