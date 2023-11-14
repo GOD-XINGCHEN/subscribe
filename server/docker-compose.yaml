@@ -6,7 +6,7 @@ services:
     ports:
       - "4397:25500"
     environment:
-      - MANAGED_PREFIX=https://subscribe.leroytop.com
+      MANAGED_PREFIX: https://subscribe.leroytop.com
     restart: always
 #    volumes:
 #      - ./replacements/config/custom.ini:/base/config/custom.ini
