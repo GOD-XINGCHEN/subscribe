@@ -5,4 +5,5 @@ export default defineConfig({
   routes: [{ path: '/', component: 'index' }],
   npmClient: 'npm',
   favicons: ['https://cdn.leroytop.com/images/icon.ico'],
+  hash: true,
 });
