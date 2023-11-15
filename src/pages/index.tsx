@@ -30,6 +30,7 @@ export default function HomePage() {
     mode: 'base',
     target: 'clash',
     request: 'https://subscribe.leroytop.com/sub?',
+    exclude: '官网|产品|平台|新网址',
     extra: ['emoji', 'fdn', 'expand'],
   });
   const [handleUrl, setHandleUrl] = useState('');
