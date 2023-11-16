@@ -55,7 +55,7 @@ export default function HomePage() {
           label: 'ACL4SSR',
           options: data.tree.map((ele: { path: string }) => ({
             label: `${ele.path}${
-              ele.path.includes('Online') ? '(同步GitHub，解析慢)' : ''
+              ele.path.includes('Online') ? ' (同步GitHub，解析慢)' : ''
             }`,
             value: `https://subscribe.leroytop.com/ACL4SSR/Clash/config/${ele.path}`,
           })),
