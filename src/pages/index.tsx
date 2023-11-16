@@ -46,22 +46,23 @@ export default function HomePage() {
     },
   ]);
   useEffect(() => {
-    axios
-      .get(
+    (async () => {
+      const { data } = await axios.get(
         'https://api.github.com/repos/ACL4SSR/ACL4SSR/git/trees/544f3b0c4b1ad20759c84352e954230900c0ea2b',
-      )
-      .then(({ data }) => {
-        setConfigOptions([
-          {
-            label: 'ACL4SSR',
-            options: data.tree.map((ele: { path: string }) => ({
-              label: ele.path,
-              value: `https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/${ele.path}`,
-            })),
-          },
-          ...configOptions,
-        ]);
-      });
+      );
+      setConfigOptions([
+        {
+          label: 'ACL4SSR',
+          options: data.tree.map((ele: { path: string }) => ({
+            label: `${ele.path}${
+              ele.path.includes('Online') ? '(同步GitHub，解析慢)' : ''
+            }`,
+            value: `https://subscribe.leroytop.com/ACL4SSR/Clash/config/${ele.path}`,
+          })),
+        },
+        ...configOptions,
+      ]);
+    })();
   }, []);
   return (
     <div style={{ padding: 16 }}>

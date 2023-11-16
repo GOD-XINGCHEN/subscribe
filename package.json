@@ -2,12 +2,12 @@
   "private": true,
   "author": "leroy <gmail@leroytop.email>",
   "scripts": {
-    "dev": "umi dev",
     "build": "umi build",
+    "dev": "umi dev",
     "postinstall": "umi setup",
+    "prepare": "husky install",
     "setup": "umi setup",
-    "start": "npm run dev",
-    "prepare": "husky install"
+    "start": "npm run dev"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
@@ -19,6 +19,7 @@
   "devDependencies": {
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/parser": "^5.62.0",
     "husky": "^8",
     "lint-staged": "^13",
     "prettier": "^2",
