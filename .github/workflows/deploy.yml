@@ -83,6 +83,19 @@ jobs:
             cd /wwwroot/subscribe
             tar zxf build.tar.gz
             rm build.tar.gz
+            if [ ! -d "/wwwroot/subscribe/ACL4SSR" ]; then
+              echo "ACL4SSR项目不存在则重新拉取"
+              git clone -b master git@github.com:ACL4SSR/ACL4SSR.git
+            elif [ ! -d "/wwwroot/subscribe/ACL4SSR/.git" ]; then
+              echo "ACL4SSR目录存在但无git配置"
+              rm -rf /wwwroot/subscribe/ACL4SSR
+              git clone -b master git@github.com:ACL4SSR/ACL4SSR.git
+            else
+              echo "更新远程ACL4SSR项目"
+              cd /wwwroot/subscribe/ACL4SSR
+              git pull
+            fi
+            echo "更新服务端"
             cd /wwwroot/subscribe/server
             docker-compose pull && docker-compose up -d
             echo "Complete!!!"
