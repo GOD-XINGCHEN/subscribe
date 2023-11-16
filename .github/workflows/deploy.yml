@@ -85,7 +85,7 @@ jobs:
             rm build.tar.gz
             if [ ! -d "/wwwroot/subscribe/ACL4SSR" ]; then
               echo "ACL4SSR项目不存在则重新拉取"
-              git clone -b master git@github.com:ACL4SSR/ACL4SSR.git
+              git clone -b master https://github.com/ACL4SSR/ACL4SSR.git
             elif [ ! -d "/wwwroot/subscribe/ACL4SSR/.git" ]; then
               echo "ACL4SSR目录存在但无git配置"
               rm -rf /wwwroot/subscribe/ACL4SSR
