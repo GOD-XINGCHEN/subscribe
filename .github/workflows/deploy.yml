@@ -67,9 +67,15 @@ jobs:
           sed -i '6,6s/password/${{secrets.API_TOKEN}}/' ./server/replacements/pref.ini
         shell: bash
 
+      # Clone ACL4SSR
+      - name: Clone ACL4SSR
+        run: |
+          git clone -b master https://github.com/ACL4SSR/ACL4SSR.git
+        shell: bash
+
       # tar
       - name: Tar dist
-        run: tar zcf build.tar.gz dist server
+        run: tar zcf build.tar.gz dist server ACL4SSR
 
       # Deploy to server
       - name: Deploy to server
@@ -93,20 +99,9 @@ jobs:
           key: ${{ secrets.ACCESS_TOKEN }}
           script: |
             cd /wwwroot/subscribe
+            rm -rf dist ACL4SSR
             tar zxf build.tar.gz
             rm build.tar.gz
-            if [ ! -d "/wwwroot/subscribe/ACL4SSR" ]; then
-              echo "ACL4SSR项目不存在则重新拉取"
-              git clone -b master https://github.com/ACL4SSR/ACL4SSR.git
-            elif [ ! -d "/wwwroot/subscribe/ACL4SSR/.git" ]; then
-              echo "ACL4SSR目录存在但无git配置"
-              rm -rf /wwwroot/subscribe/ACL4SSR
-              git clone -b master git@github.com:ACL4SSR/ACL4SSR.git
-            else
-              echo "更新远程ACL4SSR项目"
-              cd /wwwroot/subscribe/ACL4SSR
-              git pull
-            fi
             echo "更新服务端"
             cd /wwwroot/subscribe/server
             docker-compose pull && docker-compose up -d
