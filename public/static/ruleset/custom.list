@@ -13,3 +13,6 @@ DOMAIN-SUFFIX,oraclecloud.com
 
 # cloudflare
 DOMAIN-SUFFIX,cloudflare.com
+
+# ryujinx
+DOMAIN-SUFFIX,ryujinx.org
