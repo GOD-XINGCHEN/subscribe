@@ -10,3 +10,6 @@ DOMAIN-SUFFIX,imgur.com
 # Oracle Cloud
 DOMAIN-SUFFIX,oracle.com
 DOMAIN-SUFFIX,oraclecloud.com
+
+# cloudflare
+DOMAIN-SUFFIX,cloudflare.com
