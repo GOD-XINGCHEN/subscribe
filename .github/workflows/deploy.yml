@@ -64,7 +64,7 @@ jobs:
       # Write api_access_token
       - name: Write api_access_token
         run: |
-          sed -i '6,6s/password/${{API_TOKEN}}/' ./server/replacements/pref.ini
+          sed -i '6,6s/password/${{secrets.API_TOKEN}}/' ./server/replacements/pref.ini
         shell: bash
 
       # tar
