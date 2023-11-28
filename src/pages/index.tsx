@@ -21,7 +21,7 @@ import {
 } from 'antd';
 import axios from 'axios';
 import copy from 'copy-to-clipboard';
-import { useEffect, useState } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 
 const { Paragraph, Link } = Typography;
 
@@ -29,24 +29,17 @@ export default function HomePage() {
   const [initialValues] = useState({
     mode: 'base',
     target: 'clash',
-    request: 'https://subscribe.leroytop.com/sub?',
+    request: 'https://subscribe.leroytop.com/sub',
     extra: ['emoji', 'fdn', 'expand'],
-    config: '',
+    config: `${window.location.origin}/static/config/custom.ini`,
   });
   const [handleUrl, setHandleUrl] = useState('');
-  const [configOptions, setConfigOptions] = useState([
-    {
-      label: 'default',
-      value: ``,
-    },
+  const [configOptions, setConfigOptions] = useState<
+    ComponentProps<typeof ProFormSelect>['options']
+  >([
     {
       label: 'Custom',
-      options: [
-        {
-          label: 'Personal Use',
-          value: `${window.location.origin}/static/config/custom.ini`,
-        },
-      ],
+      value: initialValues.config,
     },
   ]);
   useEffect(() => {
@@ -55,7 +48,10 @@ export default function HomePage() {
         'https://api.github.com/repos/ACL4SSR/ACL4SSR/git/trees/544f3b0c4b1ad20759c84352e954230900c0ea2b',
       );
       setConfigOptions([
-        ...configOptions,
+        {
+          label: 'Custom',
+          value: initialValues.config,
+        },
         {
           label: 'ACL4SSR',
           options: data.tree.map((ele: { path: string }) => ({
@@ -86,9 +82,9 @@ export default function HomePage() {
       >
         <ProForm
           initialValues={initialValues}
-          onFinish={async ({ mode, request, ...params }) => {
-            console.log('params', request, params);
-            const url = `${request}${Object.entries(params)
+          onFinish={async ({ mode, ...params }) => {
+            console.log('params', initialValues.request, params);
+            const url = `${initialValues.request}?${Object.entries(params)
               .filter(([key, val]) => !!val)
               .map(([key, val]) => `${key}=${val}`)
               .join('&')}`;
@@ -191,35 +187,35 @@ export default function HomePage() {
             rules={[{ required: true }]}
             name="target"
           />
-          <ProFormText label="后端地址" name="request" readonly />
+          <ProFormSelect
+            label="远程配置"
+            name="config"
+            options={configOptions}
+            extra={
+              <>
+                远程配置参阅
+                <Link
+                  href="https://github.com/ACL4SSR/ACL4SSR/tree/master/Clash/config"
+                  target="_blank"
+                >
+                  链接
+                  <PaperClipOutlined />
+                </Link>
+              </>
+            }
+            transform={(value, namePath) => {
+              if (!value) return {};
+              return {
+                [namePath]: encodeURIComponent(value),
+              };
+            }}
+          />
           <ProFormDependency name={['mode']}>
             {({ mode }) => {
               if (mode === 'base') return null;
+
               return (
                 <>
-                  <ProFormSelect
-                    label="远程配置"
-                    name="config"
-                    options={configOptions}
-                    extra={
-                      <>
-                        远程配置参阅
-                        <Link
-                          href="https://github.com/ACL4SSR/ACL4SSR/tree/master/Clash/config"
-                          target="_blank"
-                        >
-                          链接
-                          <PaperClipOutlined />
-                        </Link>
-                      </>
-                    }
-                    transform={(value, namePath) => {
-                      if (!value) return {};
-                      return {
-                        [namePath]: encodeURIComponent(value),
-                      };
-                    }}
-                  />
                   <ProFormText
                     label="Include"
                     name="include"
