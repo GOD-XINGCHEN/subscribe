@@ -61,6 +61,12 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      # Write api_access_token
+      - name: Write api_access_token
+        run: |
+          sed -i '6,6s/password/${{API_TOKEN}}/' ./server/replacements/pref.ini
+        shell: bash
+
       # tar
       - name: Tar dist
         run: tar zcf build.tar.gz dist server

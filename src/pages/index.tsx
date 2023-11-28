@@ -3,12 +3,12 @@ import {
   ProCard,
   ProForm,
   ProFormCheckbox,
+  ProFormDependency,
   ProFormRadio,
   ProFormSelect,
   ProFormText,
   ProFormTextArea,
 } from '@ant-design/pro-components';
-import { ProFormDependency } from '@ant-design/pro-form';
 import {
   Col,
   ConfigProvider,
@@ -30,11 +30,15 @@ export default function HomePage() {
     mode: 'base',
     target: 'clash',
     request: 'https://subscribe.leroytop.com/sub?',
-    exclude: '官网|产品|平台|新网址',
     extra: ['emoji', 'fdn', 'expand'],
+    config: '',
   });
   const [handleUrl, setHandleUrl] = useState('');
   const [configOptions, setConfigOptions] = useState([
+    {
+      label: 'default',
+      value: ``,
+    },
     {
       label: 'Custom',
       options: [
@@ -51,6 +55,7 @@ export default function HomePage() {
         'https://api.github.com/repos/ACL4SSR/ACL4SSR/git/trees/544f3b0c4b1ad20759c84352e954230900c0ea2b',
       );
       setConfigOptions([
+        ...configOptions,
         {
           label: 'ACL4SSR',
           options: data.tree.map((ele: { path: string }) => ({
@@ -60,7 +65,6 @@ export default function HomePage() {
             value: `https://subscribe.leroytop.com/ACL4SSR/Clash/config/${ele.path}`,
           })),
         },
-        ...configOptions,
       ]);
     })();
   }, []);
@@ -85,6 +89,7 @@ export default function HomePage() {
           onFinish={async ({ mode, request, ...params }) => {
             console.log('params', request, params);
             const url = `${request}${Object.entries(params)
+              .filter(([key, val]) => !!val)
               .map(([key, val]) => `${key}=${val}`)
               .join('&')}`;
             setHandleUrl(url);
@@ -196,7 +201,6 @@ export default function HomePage() {
                     label="远程配置"
                     name="config"
                     options={configOptions}
-                    rules={[{ required: true }]}
                     extra={
                       <>
                         远程配置参阅
@@ -230,7 +234,7 @@ export default function HomePage() {
                   <ProFormText
                     label="Exclude"
                     name="exclude"
-                    placeholder="节点名不包含的关键字，支持正则"
+                    placeholder="节点名不包含的关键字，支持正则 例：官网|产品|平台|新网址"
                     transform={(value, namePath) => {
                       if (!value) return {};
                       return {
@@ -289,9 +293,6 @@ export default function HomePage() {
                         udp: {
                           text: 'udp: 用于开启该订阅链接的 UDP，默认为 false',
                         },
-                        append_type: {
-                          text: 'append_type: 用于在节点名称前插入节点类型，如 [SS],[SSR]等',
-                        },
                         expand: {
                           text: 'expand: 将规则全文写进订阅，默认为 true',
                         },
@@ -301,6 +302,19 @@ export default function HomePage() {
                       }}
                     />
                   </ConfigProvider>
+
+                  <ProFormText
+                    label="自定义参数"
+                    name="custom"
+                    placeholder="例：a=1&b=2"
+                    transform={(value = '') => {
+                      if (!value) return {};
+                      const params = Object.fromEntries(
+                        new URLSearchParams(value),
+                      );
+                      return params;
+                    }}
+                  />
                 </>
               );
             }}
