@@ -16,3 +16,6 @@ DOMAIN-SUFFIX,cloudflare.com
 
 # ryujinx
 DOMAIN-SUFFIX,ryujinx.org
+
+# jetbrains
+DOMAIN-SUFFIX,jetbrains.com
