@@ -1,5 +1,7 @@
 import { PaperClipOutlined, SmileOutlined } from '@ant-design/icons';
+import type { ProFormInstance } from '@ant-design/pro-components';
 import {
+  ModalForm,
   ProCard,
   ProForm,
   ProFormCheckbox,
@@ -10,6 +12,7 @@ import {
   ProFormTextArea,
 } from '@ant-design/pro-components';
 import {
+  Button,
   Col,
   ConfigProvider,
   Descriptions,
@@ -21,21 +24,73 @@ import {
 } from 'antd';
 import axios from 'axios';
 import copy from 'copy-to-clipboard';
-import { ComponentProps, useEffect, useState } from 'react';
+import { ComponentProps, useEffect, useRef, useState } from 'react';
 
 const { Paragraph, Link } = Typography;
 
+const qs = (params: Record<string, string | number>) => {
+  return Object.entries(params)
+    .filter(([key, val]) => !!val)
+    .map(([key, val]) => `${key}=${val}`)
+    .join('&');
+};
+
 export default function HomePage() {
+  const form = useRef<ProFormInstance>(null);
+  const [targetEnum] = useState({
+    clash: {
+      text: 'Clash',
+    },
+    'surge&ver=3': {
+      text: 'Surge3',
+    },
+    'surge&ver=4': {
+      text: 'Surge4',
+    },
+    quan: {
+      text: 'Quantumult',
+    },
+    quanx: {
+      text: 'QuantumultX',
+    },
+    surfboard: {
+      text: 'Surfboard',
+    },
+    loon: {
+      text: 'Loon',
+    },
+    sssub: {
+      text: 'SSAndroid',
+    },
+    v2ray: {
+      text: 'V2Ray',
+    },
+    ss: {
+      text: 'ss',
+    },
+    ssr: {
+      text: 'ssr',
+    },
+    ssd: {
+      text: 'ssd',
+    },
+    clashr: {
+      text: 'ClashR',
+    },
+    'surge&ver=2': {
+      text: 'Surge2',
+    },
+  });
   const [initialValues] = useState({
     mode: 'base',
     target: 'clash',
     request: 'https://subscribe.leroytop.com/sub',
     extra: ['emoji', 'fdn', 'expand'],
-    config: `${window.location.origin}/static/config/custom.ini`,
+    config: `https://subscribe.leroytop.com/static/config/custom.ini`,
   });
   const [handleUrl, setHandleUrl] = useState('');
   const [configOptions, setConfigOptions] = useState<
-    ComponentProps<typeof ProFormSelect>['options']
+    Required<ComponentProps<typeof ProFormSelect>['options']>
   >([
     {
       label: 'Custom',
@@ -81,13 +136,11 @@ export default function HomePage() {
         boxShadow
       >
         <ProForm
+          formRef={form}
           initialValues={initialValues}
           onFinish={async ({ mode, ...params }) => {
             console.log('params', initialValues.request, params);
-            const url = `${initialValues.request}?${Object.entries(params)
-              .filter(([key, val]) => !!val)
-              .map(([key, val]) => `${key}=${val}`)
-              .join('&')}`;
+            const url = `${initialValues.request}?${qs(params)}`;
             setHandleUrl(url);
             copy(url);
             message.success('生成并复制成功！');
@@ -101,7 +154,123 @@ export default function HomePage() {
             render: (props, doms) => (
               <Row>
                 <Col lg={{ span: 21, offset: 2 }} sm={{ span: 21, offset: 2 }}>
-                  <Space>{doms}</Space>
+                  <Space>
+                    {doms}
+                    <ModalForm<{
+                      url: string;
+                    }>
+                      title="解析链接"
+                      trigger={
+                        <div>
+                          <ConfigProvider
+                            theme={{
+                              token: {
+                                colorPrimary: '#52c41a',
+                              },
+                            }}
+                          >
+                            <Button type="primary">解析链接</Button>
+                          </ConfigProvider>
+                        </div>
+                      }
+                      autoFocusFirstInput
+                      modalProps={{
+                        destroyOnClose: true,
+                      }}
+                      submitTimeout={2000}
+                      onFinish={async (values) => {
+                        // await waitTime(2000);
+                        console.log(values.url);
+                        const [host, search] = values.url.split('?');
+                        const params = Object.fromEntries(
+                          new URLSearchParams(search),
+                        );
+                        const {
+                          target,
+                          ver,
+                          url,
+                          config,
+                          include,
+                          exclude,
+                          filename,
+                          list,
+                          emoji,
+                          scv,
+                          sort,
+                          fdn,
+                          udp,
+                          expand,
+                          classic,
+                          ...others
+                        } = params;
+
+                        const fields = Object.assign<
+                          Record<string, string>,
+                          typeof initialValues
+                        >({}, initialValues);
+                        if (target) {
+                          const key = `${target}${
+                            target === 'surge' && ver ? `&ver=${ver}` : ''
+                          }`;
+                          console.log('key', key);
+                          if ((targetEnum as any)[key]) fields.target = key;
+                        }
+                        if (url) {
+                          fields.url = decodeURIComponent(
+                            url.replace(/\|/g, '\n'),
+                          );
+                        }
+                        if (
+                          config &&
+                          (configOptions as any).find(
+                            (ele: any) =>
+                              ele.value === config ||
+                              !!ele.options?.find(
+                                (e: any) => e.value === config,
+                              ),
+                          )
+                        ) {
+                          fields.config = config;
+                        }
+                        ['include', 'exclude', 'filename'].forEach((ele) => {
+                          if (params[ele]) fields[ele] = params[ele];
+                        });
+
+                        [
+                          'list',
+                          'emoji',
+                          'scv',
+                          'sort',
+                          'fdn',
+                          'udp',
+                          'expand',
+                          'classic',
+                        ].forEach((ele) => {
+                          if (['emoji', 'fdn', 'expand'].includes(ele)) {
+                            if (params[ele] === 'false')
+                              fields.extra = fields.extra.filter(
+                                (e) => e !== ele,
+                              );
+                          } else if (params[ele] === 'true')
+                            fields.extra.push(ele);
+                        });
+                        if (others) fields.custom = qs(others);
+                        fields.mode = 'advanced';
+
+                        console.log('params', params, fields);
+                        form.current?.setFieldsValue(fields);
+                        return true;
+                      }}
+                    >
+                      <ProFormTextArea
+                        name="url"
+                        rules={[{ required: true }]}
+                        fieldProps={{
+                          autoSize: { minRows: 3 },
+                        }}
+                      />
+                    </ModalForm>
+                  </Space>
                 </Col>
               </Row>
             ),
@@ -140,50 +309,7 @@ export default function HomePage() {
           />
           <ProFormSelect
             label="客户端"
-            valueEnum={{
-              clash: {
-                text: 'Clash',
-              },
-              'surge&ver=3': {
-                text: 'Surge3',
-              },
-              'surge&ver=4': {
-                text: 'Surge4',
-              },
-              quan: {
-                text: 'Quantumult',
-              },
-              quanx: {
-                text: 'QuantumultX',
-              },
-              surfboard: {
-                text: 'Surfboard',
-              },
-              loon: {
-                text: 'Loon',
-              },
-              sssub: {
-                text: 'SSAndroid',
-              },
-              v2ray: {
-                text: 'V2Ray',
-              },
-              ss: {
-                text: 'ss',
-              },
-              ssr: {
-                text: 'ssr',
-              },
-              ssd: {
-                text: 'ssd',
-              },
-              clashr: {
-                text: 'ClashR',
-              },
-              'surge&ver=2': {
-                text: 'Surge2',
-              },
-            }}
+            valueEnum={targetEnum}
             rules={[{ required: true }]}
             name="target"
           />
@@ -240,7 +366,7 @@ export default function HomePage() {
                   />
                   <ProFormText
                     label="FileName"
-                    name="fileName"
+                    name="filename"
                     placeholder="返回的订阅文件名"
                   />
 
@@ -268,6 +394,11 @@ export default function HomePage() {
                         initialValues.extra.forEach((ele) => {
                           if (!value.includes(ele)) params[ele] = 'false';
                         });
+                        console.log(
+                          '额外参数 value',
+                          params,
+                          initialValues.extra,
+                        );
                         return params;
                       }}
                       valueEnum={{
