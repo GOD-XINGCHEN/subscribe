@@ -75,7 +75,7 @@ jobs:
 
       # tar
       - name: Tar dist
-        run: tar zcf build.tar.gz dist server ACL4SSR
+        run: tar zcf build.tar.gz dist server ACL4SSR/Clash
 
       # Deploy to server
       - name: Deploy to server
