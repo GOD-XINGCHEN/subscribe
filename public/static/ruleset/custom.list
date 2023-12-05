@@ -20,4 +20,4 @@ DOMAIN-SUFFIX,ryujinx.org
 DOMAIN-SUFFIX,jetbrains.com
 
 # oracle
-IP-CIDR,131.186.58.121,no-resolve
+IP-CIDR,131.186.58.121/0,no-resolve
