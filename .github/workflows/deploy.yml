@@ -67,15 +67,9 @@ jobs:
           sed -i '6,6s/password/${{secrets.API_TOKEN}}/' ./server/replacements/pref.ini
         shell: bash
 
-      # Clone ACL4SSR
-      - name: Clone ACL4SSR
-        run: |
-          git clone -b master https://github.com/ACL4SSR/ACL4SSR.git
-        shell: bash
-
       # tar
       - name: Tar dist
-        run: tar zcf build.tar.gz dist server ACL4SSR/Clash
+        run: tar zcf build.tar.gz dist server
 
       # Deploy to server
       - name: Deploy to server
@@ -99,7 +93,7 @@ jobs:
           key: ${{ secrets.ACCESS_TOKEN }}
           script: |
             cd /wwwroot/subscribe
-            rm -rf dist ACL4SSR
+            rm -rf dist
             tar zxf build.tar.gz
             rm build.tar.gz
             echo "更新服务端"

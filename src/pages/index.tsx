@@ -86,7 +86,7 @@ export default function HomePage() {
     target: 'clash',
     request: 'https://subscribe.leroytop.com/sub',
     extra: ['emoji', 'fdn', 'expand'],
-    config: `https://subscribe.leroytop.com/static/config/custom.ini`,
+    config: `https://raw.githubusercontent.com/leroy20317/ACL4SSR/main/Clash/config/Custom.ini`,
   });
   const [handleUrl, setHandleUrl] = useState('');
   const [configOptions, setConfigOptions] = useState<
@@ -113,7 +113,7 @@ export default function HomePage() {
             label: `${ele.path}${
               ele.path.includes('Online') ? ' (同步GitHub)' : ''
             }`,
-            value: `https://subscribe.leroytop.com/ACL4SSR/Clash/config/${ele.path}`,
+            value: `https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/${ele.path}`,
           })),
         },
       ]);
