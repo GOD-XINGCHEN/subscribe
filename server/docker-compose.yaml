@@ -3,8 +3,11 @@ services:
   subconverter:
     image: tindy2013/subconverter:latest
     container_name: subconverter
+    restart: always
     ports:
       - "4397:25500"
+    networks:
+      - share_net
 #    environment:
 #      MANAGED_PREFIX: https://subscribe.leroytop.com
     restart: always
@@ -26,3 +29,6 @@ services:
     # 仅更新subconverter与watchtower容器,如需其他自行添加 '容器名' ,如:subconverter watchtower nginx
     # --cleanup 更新后清理旧版本镜像
     # --schedule 自动检测更新 crontab定时(限定6位crontab) 此处代表凌晨4点整
+networks:
+  share_net:
+    driver: bridge
