@@ -10,7 +10,6 @@ services:
       - share_net
 #    environment:
 #      MANAGED_PREFIX: https://subscribe.leroytop.com
-    restart: always
     volumes:
       - ./replacements/pref.ini:/base/pref.ini
 # 自动更新docker镜像
