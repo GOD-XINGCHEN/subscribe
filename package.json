@@ -1,6 +1,6 @@
 {
   "private": true,
-  "author": "leroy <gmail@leroytop.email>",
+  "author": "leroy <gmail@leroytop.com>",
   "scripts": {
     "build": "umi build",
     "dev": "umi dev",
