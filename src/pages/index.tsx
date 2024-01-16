@@ -41,44 +41,50 @@ export default function HomePage() {
     clash: {
       text: 'Clash',
     },
+    clashr: {
+      text: 'ClashR',
+    },
+    quan: {
+      text: 'Quantumult',
+    },
+    quanx: {
+      text: 'Quantumult X',
+    },
+    loon: {
+      text: 'Loon',
+    },
+    mellow: {
+      text: 'Mellow',
+    },
+    ss: {
+      text: 'SS (SIP002)',
+    },
+    sssub: {
+      text: 'SS (软件订阅/SIP008)',
+    },
+    ssr: {
+      text: 'SSR',
+    },
+    ssd: {
+      text: 'SSD',
+    },
+    surfboard: {
+      text: 'Surfboard',
+    },
+    'surge&ver=2': {
+      text: 'Surge2',
+    },
     'surge&ver=3': {
       text: 'Surge3',
     },
     'surge&ver=4': {
       text: 'Surge4',
     },
-    quan: {
-      text: 'Quantumult',
-    },
-    quanx: {
-      text: 'QuantumultX',
-    },
-    surfboard: {
-      text: 'Surfboard',
-    },
-    loon: {
-      text: 'Loon',
-    },
-    sssub: {
-      text: 'SSAndroid',
+    trojan: {
+      text: 'Trojan',
     },
     v2ray: {
       text: 'V2Ray',
-    },
-    ss: {
-      text: 'ss',
-    },
-    ssr: {
-      text: 'ssr',
-    },
-    ssd: {
-      text: 'ssd',
-    },
-    clashr: {
-      text: 'ClashR',
-    },
-    'surge&ver=2': {
-      text: 'Surge2',
     },
   });
   const [initialValues] = useState({
