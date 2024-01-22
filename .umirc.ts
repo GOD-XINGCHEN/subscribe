@@ -1,6 +1,7 @@
 import { defineConfig } from 'umi';
 
 export default defineConfig({
+  esbuildMinifyIIFE: true,
   title: '订阅转换',
   routes: [{ path: '/', component: 'index' }],
   favicons: ['https://cdn.leroytop.com/images/icon.ico'],
