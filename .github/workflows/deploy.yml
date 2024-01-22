@@ -33,7 +33,7 @@ jobs:
 
       # 缓存 node modules
       - name: Cache node modules
-        uses: actions/cache@4
+        uses: actions/cache@4.0.0
         id: cache
         env:
           cache-name: cache-node-modules
