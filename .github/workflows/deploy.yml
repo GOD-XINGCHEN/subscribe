@@ -67,15 +67,14 @@ jobs:
       # Deploy to server
       - name: Deploy to server
         id: deploy
-        uses: Pendect/action-rsyncer@v2
-        env:
-          DEPLOY_KEY: ${{secrets.ACCESS_TOKEN}}
+        uses: appleboy/scp-action@v0.1.7
         with:
-          flags: '-avzr --delete'
-          options: ''
-          ssh_options: ''
-          src: 'build.tar.gz'
-          dest: '${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/wwwroot/subscribe'
+          #host: "foo.com,bar.com"
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.ACCESS_TOKEN }}
+          source: "build.tar.gz"
+          target: /wwwroot/subscribe
 
       # 远程Command
       - name: Command
