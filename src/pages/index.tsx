@@ -80,11 +80,17 @@ export default function HomePage() {
     'surge&ver=4': {
       text: 'Surge4',
     },
+    'surge&ver=5': {
+      text: 'Surge5',
+    },
     trojan: {
       text: 'Trojan',
     },
     v2ray: {
       text: 'V2Ray',
+    },
+    singbox: {
+      text: 'Singbox',
     },
   });
   const [initialValues] = useState({
