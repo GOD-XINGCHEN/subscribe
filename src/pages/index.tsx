@@ -122,9 +122,7 @@ export default function HomePage() {
         {
           label: 'ACL4SSR',
           options: data.tree.map((ele: { path: string }) => ({
-            label: `${ele.path}${
-              ele.path.includes('Online') ? ' (同步GitHub)' : ''
-            }`,
+            label: `${ele.path}${ele.path.includes('Online') ? ' (同步GitHub)' : ''}`,
             value: `https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/${ele.path}`,
           })),
         },
@@ -194,9 +192,7 @@ export default function HomePage() {
                         // await waitTime(2000);
                         console.log(values.url);
                         const [host, search] = values.url.split('?');
-                        const params = Object.fromEntries(
-                          new URLSearchParams(search),
-                        );
+                        const params = Object.fromEntries(new URLSearchParams(search));
                         const {
                           target,
                           ver,
@@ -216,30 +212,24 @@ export default function HomePage() {
                           ...others
                         } = params;
 
-                        const fields = Object.assign<
-                          Record<string, string>,
-                          typeof initialValues
-                        >({}, initialValues);
+                        const fields = Object.assign<Record<string, string>, typeof initialValues>(
+                          {},
+                          initialValues,
+                        );
                         if (target) {
-                          const key = `${target}${
-                            target === 'surge' && ver ? `&ver=${ver}` : ''
-                          }`;
+                          const key = `${target}${target === 'surge' && ver ? `&ver=${ver}` : ''}`;
                           console.log('key', key);
                           if ((targetEnum as any)[key]) fields.target = key;
                         }
                         if (url) {
-                          fields.url = decodeURIComponent(
-                            url.replace(/\|/g, '\n'),
-                          );
+                          fields.url = decodeURIComponent(url.replace(/\|/g, '\n'));
                         }
                         if (
                           config &&
                           (configOptions as any).find(
                             (ele: any) =>
                               ele.value === config ||
-                              !!ele.options?.find(
-                                (e: any) => e.value === config,
-                              ),
+                              !!ele.options?.find((e: any) => e.value === config),
                           )
                         ) {
                           fields.config = config;
@@ -248,24 +238,14 @@ export default function HomePage() {
                           if (params[ele]) fields[ele] = params[ele];
                         });
 
-                        [
-                          'list',
-                          'emoji',
-                          'scv',
-                          'sort',
-                          'fdn',
-                          'udp',
-                          'expand',
-                          'classic',
-                        ].forEach((ele) => {
-                          if (['emoji', 'fdn', 'expand'].includes(ele)) {
-                            if (params[ele] === 'false')
-                              fields.extra = fields.extra.filter(
-                                (e) => e !== ele,
-                              );
-                          } else if (params[ele] === 'true')
-                            fields.extra.push(ele);
-                        });
+                        ['list', 'emoji', 'scv', 'sort', 'fdn', 'udp', 'expand', 'classic'].forEach(
+                          (ele) => {
+                            if (['emoji', 'fdn', 'expand'].includes(ele)) {
+                              if (params[ele] === 'false')
+                                fields.extra = fields.extra.filter((e) => e !== ele);
+                            } else if (params[ele] === 'true') fields.extra.push(ele);
+                          },
+                        );
                         if (others) fields.custom = qs(others);
                         fields.mode = 'advanced';
 
@@ -313,9 +293,7 @@ export default function HomePage() {
             transform={(value, namePath) => {
               if (!value) return {};
               return {
-                [namePath]: encodeURIComponent(
-                  value.replace(/(\n|\r|\n\r)/g, '|'),
-                ),
+                [namePath]: encodeURIComponent(value.replace(/(\n|\r|\n\r)/g, '|')),
               };
             }}
           />
@@ -376,11 +354,7 @@ export default function HomePage() {
                       };
                     }}
                   />
-                  <ProFormText
-                    label="FileName"
-                    name="filename"
-                    placeholder="返回的订阅文件名"
-                  />
+                  <ProFormText label="FileName" name="filename" placeholder="返回的订阅文件名" />
 
                   <ConfigProvider
                     theme={{
@@ -406,11 +380,7 @@ export default function HomePage() {
                         initialValues.extra.forEach((ele) => {
                           if (!value.includes(ele)) params[ele] = 'false';
                         });
-                        console.log(
-                          '额外参数 value',
-                          params,
-                          initialValues.extra,
-                        );
+                        console.log('额外参数 value', params, initialValues.extra);
                         return params;
                       }}
                       valueEnum={{
@@ -448,9 +418,7 @@ export default function HomePage() {
                     placeholder="例：a=1&b=2"
                     transform={(value = '') => {
                       if (!value) return {};
-                      const params = Object.fromEntries(
-                        new URLSearchParams(value),
-                      );
+                      const params = Object.fromEntries(new URLSearchParams(value));
                       return params;
                     }}
                   />
@@ -467,11 +435,7 @@ export default function HomePage() {
             {
               key: 1,
               label: '订阅地址',
-              children: handleUrl ? (
-                <Paragraph copyable>{handleUrl}</Paragraph>
-              ) : (
-                ''
-              ),
+              children: handleUrl ? <Paragraph copyable>{handleUrl}</Paragraph> : '',
             },
           ]}
         />
