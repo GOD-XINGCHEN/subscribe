@@ -12,8 +12,9 @@ services:
 #      MANAGED_PREFIX: https://subscribe.leroytop.com
     volumes:
       - ./replacements/pref.ini:/base/pref.ini
-      - ./replacements/surge.conf:/base/base/surge.conf
-      - ./replacements/quanx.conf:/base/base/quanx.conf
+      - ./replacements/base/all_base.tpl:/base/base/all_base.tpl
+      - ./replacements/base/surge.conf:/base/base/surge.conf
+      - ./replacements/base/quanx.conf:/base/base/quanx.conf
 # 自动更新docker镜像
   watchtower:
     image: containrrr/watchtower
