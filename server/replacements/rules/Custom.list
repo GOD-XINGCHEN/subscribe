@@ -1,0 +1,13 @@
+# 内容：额外添加
+
+# cloudflare
+DOMAIN-SUFFIX,cloudflare.com
+
+# ryujinx
+DOMAIN-SUFFIX,ryujinx.org
+
+# jetbrains
+DOMAIN-SUFFIX,jetbrains.com
+
+# vpn
+DOMAIN-SUFFIX,yuyan.vin

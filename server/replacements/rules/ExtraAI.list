@@ -1,0 +1,12 @@
+
+# Gemma
+DOMAIN-SUFFIX,huggingface.co
+
+# Github Copilot
+DOMAIN-SUFFIX,copilot-proxy.githubusercontent.com
+DOMAIN-SUFFIX,api.github.com
+DOMAIN-SUFFIX,alive.github.com
+
+# Jetbrains
+DOMAIN-SUFFIX,intellij.net
+DOMAIN-SUFFIX,grazie.ai

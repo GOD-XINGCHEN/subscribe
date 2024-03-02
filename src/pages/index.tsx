@@ -98,14 +98,14 @@ export default function HomePage() {
     target: 'clash',
     request: 'https://subscribe.leroytop.com/sub',
     extra: ['emoji', 'fdn', 'expand'],
-    config: `https://raw.githubusercontent.com/leroy20317/ACL4SSR/main/Clash/config/Custom.ini`,
+    config: `https://raw.githubusercontent.com/leroy20317/subscribe/main/server/replacements/config/ForLeroy.ini`,
   });
   const [handleUrl, setHandleUrl] = useState('');
   const [configOptions, setConfigOptions] = useState<
     Required<ComponentProps<typeof ProFormSelect>['options']>
   >([
     {
-      label: 'Custom',
+      label: 'ForLeroy',
       value: initialValues.config,
     },
   ]);
@@ -116,7 +116,7 @@ export default function HomePage() {
       );
       setConfigOptions([
         {
-          label: 'Custom',
+          label: 'ForLeroy',
           value: initialValues.config,
         },
         {
