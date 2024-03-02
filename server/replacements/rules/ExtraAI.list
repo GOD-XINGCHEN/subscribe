@@ -21,6 +21,7 @@ DOMAIN-SUFFIX,gstatic.com
 DOMAIN-SUFFIX,googleapis.com
 DOMAIN-SUFFIX,googleusercontent.com
 DOMAIN-SUFFIX,clients6.google.com
+DOMAIN-SUFFIX,lh3.googleusercontent.com
 
 # Gemma
 DOMAIN-SUFFIX,huggingface.co
