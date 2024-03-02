@@ -1,12 +1,29 @@
+# AI网站额外需要代理的
+# Bing
+DOMAIN-SUFFIX,r.bing.com
+DOMAIN-SUFFIX,copilot.microsoft.com
 
-# Gemma
-DOMAIN-SUFFIX,huggingface.co
+# Jetbrains
+DOMAIN-SUFFIX,intellij.net
+DOMAIN-SUFFIX,grazie.ai
+
+# Codeium
+DOMAIN-SUFFIX,codeium.com
 
 # Github Copilot
 DOMAIN-SUFFIX,copilot-proxy.githubusercontent.com
 DOMAIN-SUFFIX,api.github.com
 DOMAIN-SUFFIX,alive.github.com
 
-# Jetbrains
-DOMAIN-SUFFIX,intellij.net
-DOMAIN-SUFFIX,grazie.ai
+# Gemini
+DOMAIN-SUFFIX,gemini.google.com
+DOMAIN-SUFFIX,gstatic.com
+DOMAIN-SUFFIX,googleapis.com
+DOMAIN-SUFFIX,googleusercontent.com
+DOMAIN-SUFFIX,clients6.google.com
+
+# Gemma
+DOMAIN-SUFFIX,huggingface.co
+
+# Coze
+DOMAIN-SUFFIX,coze.com
