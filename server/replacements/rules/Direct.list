@@ -1,3 +1,6 @@
 
 # 搜狗联想
 DOMAIN-SUFFIX,get.sogou.com
+
+# 字节图片
+DOMAIN-SUFFIX,byteimg.com
