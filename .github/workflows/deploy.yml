@@ -31,7 +31,7 @@ jobs:
           node-version: 'lts/iron'
 
       #安装 pnpm
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
         name: Install pnpm
         with:
           version: 8
