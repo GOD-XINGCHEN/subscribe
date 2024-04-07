@@ -240,10 +240,14 @@ export default function HomePage() {
 
                         ['list', 'emoji', 'scv', 'sort', 'fdn', 'udp', 'expand', 'classic'].forEach(
                           (ele) => {
-                            if (['emoji', 'fdn', 'expand'].includes(ele)) {
-                              if (params[ele] === 'false')
-                                fields.extra = fields.extra.filter((e) => e !== ele);
-                            } else if (params[ele] === 'true') fields.extra.push(ele);
+                            if (
+                              ['emoji', 'fdn', 'expand'].includes(ele) &&
+                              params[ele] === 'false'
+                            ) {
+                              fields.extra = fields.extra.filter((e) => e !== ele);
+                            } else if (params[ele] === 'true') {
+                              fields.extra.push(ele);
+                            }
                           },
                         );
                         if (others) fields.custom = qs(others);
@@ -416,11 +420,9 @@ export default function HomePage() {
                     label="自定义参数"
                     name="custom"
                     placeholder="例：a=1&b=2"
-                    transform={(value = '') => {
-                      if (!value) return {};
-                      const params = Object.fromEntries(new URLSearchParams(value));
-                      return params;
-                    }}
+                    transform={(value = '') =>
+                      value ? Object.fromEntries(new URLSearchParams(value)) : {}
+                    }
                   />
                 </>
               );
