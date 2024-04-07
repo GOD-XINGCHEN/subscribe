@@ -15,6 +15,9 @@ DOMAIN-SUFFIX,copilot-proxy.githubusercontent.com
 DOMAIN-SUFFIX,api.github.com
 DOMAIN-SUFFIX,alive.github.com
 
+# Github Copilot Telemetry
+DOMAIN-SUFFIX,copilot-telemetry.githubusercontent.com
+
 # Gemini
 DOMAIN-SUFFIX,gemini.google.com
 DOMAIN-SUFFIX,gstatic.com
