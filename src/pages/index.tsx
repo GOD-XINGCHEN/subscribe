@@ -183,7 +183,6 @@ export default function HomePage() {
                           </ConfigProvider>
                         </div>
                       }
-                      autoFocusFirstInput
                       modalProps={{
                         destroyOnClose: true,
                       }}
@@ -263,6 +262,7 @@ export default function HomePage() {
                         rules={[{ required: true }]}
                         fieldProps={{
                           autoSize: { minRows: 3 },
+                          autoFocus: true,
                         }}
                       />
                     </ModalForm>

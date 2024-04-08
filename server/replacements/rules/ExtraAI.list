@@ -13,7 +13,6 @@ DOMAIN-SUFFIX,codeium.com
 # Github Copilot
 DOMAIN-SUFFIX,copilot-proxy.githubusercontent.com
 DOMAIN-SUFFIX,api.github.com
-DOMAIN-SUFFIX,alive.github.com
 
 # Gemini
 DOMAIN-SUFFIX,gemini.google.com
