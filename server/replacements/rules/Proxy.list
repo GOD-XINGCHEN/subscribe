@@ -14,4 +14,5 @@ DOMAIN-SUFFIX,yuyan.vin
 
 # adobe破解需要放行
 DOMAIN-SUFFIX,photos.adobe.io
+DOMAIN-SUFFIX,firefly-ps.adobe.io
 DOMAIN-SUFFIX,lcs-cops.adobe.io
