@@ -1,7 +1,7 @@
 version: '3'
 services:
   subconverter:
-    image: asdlokj1qpi23/subconverter:latest
+    image: tindy2013/subconverter:latest
     container_name: subconverter
     restart: always
     ports:
@@ -12,7 +12,6 @@ services:
 #      MANAGED_PREFIX: https://subscribe.leroytop.com
     volumes:
       - ./replacements/pref.ini:/base/pref.ini
-      - ./replacements/base/all_base.tpl:/base/base/all_base.tpl
       - ./replacements/base/surge.conf:/base/base/surge.conf
       - ./replacements/base/quanx.conf:/base/base/quanx.conf
 # 自动更新docker镜像
