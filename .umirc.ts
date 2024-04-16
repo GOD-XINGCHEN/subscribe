@@ -3,7 +3,7 @@ import { defineConfig } from 'umi';
 export default defineConfig({
   esbuildMinifyIIFE: true,
   title: '订阅转换',
-  routes: [{ path: '/', component: 'index' }],
+  routes: [{ path: '/', component: 'index' },{ path: '/jetbra', component: 'jetbra' }],
   favicons: ['https://cdn.leroytop.com/images/icon.ico'],
   hash: true,
   codeSplitting: {jsStrategy: 'depPerChunk'},

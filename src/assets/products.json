@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "name": "IntelliJ IDEA",
+    "code": "II,PCWMP,PSI",
+    "icon": "icon-ii"
+  },
+  {
+    "id": 2,
+    "name": "PhpStorm",
+    "code": "PS,PCWMP,PSI",
+    "icon": "icon-ps"
+  },
+  {
+    "id": 3,
+    "name": "AppCode",
+    "code": "AC,PCWMP,PSI",
+    "icon": "icon-ac"
+  },
+  {
+    "id": 4,
+    "name": "DataGrip",
+    "code": "DB,PSI,PDB",
+    "icon": "icon-db"
+  },
+  {
+    "id": 5,
+    "name": "RubyMine",
+    "code": "RM,PCWMP,PSI",
+    "icon": "icon-rm"
+  },
+  {
+    "id": 6,
+    "name": "WebStorm",
+    "code": "WS,PCWMP,PSI",
+    "icon": "icon-ws"
+  },
+  {
+    "id": 7,
+    "name": "Rider",
+    "code": "RD,PDB,PSI,PCWMP",
+    "icon": "icon-rd"
+  },
+  {
+    "id": 8,
+    "name": "CLion",
+    "code": "CL,PSI,PCWMP",
+    "icon": "icon-cl"
+  },
+  {
+    "id": 9,
+    "name": "PyCharm",
+    "code": "PC,PSI,PCWMP",
+    "icon": "icon-pc"
+  },
+  {
+    "id": 10,
+    "name": "GoLand",
+    "code": "GO,PSI,PCWMP",
+    "icon": "icon-go"
+  },
+  {
+    "id": 11,
+    "name": "DataSpell",
+    "code": "DS,PSI,PDB,PCWMP",
+    "icon": "icon-ds"
+  },
+  {
+    "id": 12,
+    "name": "dotCover",
+    "code": "DC",
+    "icon": "icon-dc"
+  },
+  {
+    "id": 13,
+    "name": "dotTrace",
+    "code": "DPN,DP",
+    "icon": "icon-dpn"
+  },
+  {
+    "id": 14,
+    "name": "dotMemory",
+    "code": "DM",
+    "icon": "icon-dm"
+  }
+]
