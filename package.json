@@ -6,6 +6,7 @@
     "dev": "umi dev",
     "postinstall": "umi setup",
     "prepare": "husky install",
+    "previev": "umi preview --port 8000",
     "setup": "umi setup",
     "start": "npm run dev"
   },

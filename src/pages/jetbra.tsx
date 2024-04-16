@@ -155,7 +155,7 @@ const JetBrains = () => {
 
   const pem2base64 = (pem: string) => {
     return pem
-      .split('\\n')
+      .split('\n')
       .reduce((base64, line) => (line.includes('--') ? base64 : base64 + line), '');
   };
 
