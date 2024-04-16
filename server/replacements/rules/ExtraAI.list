@@ -14,10 +14,6 @@ DOMAIN-SUFFIX,codeium.com
 DOMAIN-SUFFIX,copilot-proxy.githubusercontent.com
 DOMAIN-SUFFIX,api.github.com
 
-# Cocopilot
-DOMAIN-SUFFIX,githubcopilot.com
-DOMAIN-SUFFIX,cocopilot.org
-
 # Gemini
 DOMAIN-SUFFIX,gemini.google.com
 DOMAIN-SUFFIX,gstatic.com
