@@ -12,9 +12,9 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { ConfigProvider, theme } from 'antd';
-import axios from 'axios';
 import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
+import { Helmet } from 'umi';
 import styles from './jetbra.less';
 
 const pemEncodedKey = `-----BEGIN PRIVATE KEY-----
@@ -100,45 +100,9 @@ fIqVyfK6t0eKJqrvp54XFEtJGR+lf3pBfTdcOI6QFEPKGZKoQz8Ck+BC/WBDtbjc
 -----END CERTIFICATE-----`;
 
 const JetBrains = () => {
-  const [pluginList, setPluginList] = useState([...products, ...plugins] || []);
-  const [fetch, setFetch] = useState(false);
+  const [pluginList] = useState([...products, ...plugins] || []);
   const [openModal, setOpenModal] = useState(false);
   const form = useRef<ProFormInstance>();
-
-  useEffect(() => {
-    if (!fetch) {
-      return;
-    }
-    (async () => {
-      const pluginBaseUrl = 'https://plugins.jetbrains.com';
-      const pluginMap = new Map(plugins.map((plugin) => [plugin.id, plugin.code]));
-      const [paid, freemium] = await Promise.all(
-        ['PAID', 'FREEMIUM'].map(async (type) => {
-          const res = await axios.get(`${pluginBaseUrl}/api/searchPlugins`, {
-            params: { pricingModels: type, max: 1000, offset: 0 },
-          });
-
-          return res.data.plugins.map((plugin: any) => ({
-            id: plugin.id,
-            name: plugin.name,
-            pricingModel: plugin.pricingModel,
-            icon: plugin.icon ? `${pluginBaseUrl}${plugin.icon}` : '',
-            code: '',
-          }));
-        }),
-      );
-      const list = [...paid, ...freemium];
-      const pluginList = [];
-      for (const product of list) {
-        const code =
-          pluginMap.get(product.id) ||
-          (await axios.get(`${pluginBaseUrl}/api/plugins/${product.id}`)).data.purchaseInfo
-            .productCode;
-        pluginList.push({ ...product, code });
-      }
-      setPluginList(pluginList);
-    })();
-  }, [fetch]);
 
   const checkLicense = () => {
     if (!localStorage.getItem('licenseInfo')) {
@@ -230,7 +194,7 @@ const JetBrains = () => {
       ['sign'],
     );
 
-    let licensePartBase64 = btoa(unescape(encodeURIComponent(licensePartJson)));
+    let licensePartBase64 = btoa(decodeURIComponent(encodeURIComponent(licensePartJson)));
     let sigResultsBase64 = arrayBufferToBase64(
       await window.crypto.subtle.sign(
         'RSASSA-PKCS1-v1_5',
@@ -248,6 +212,9 @@ const JetBrains = () => {
   };
   return (
     <div className={styles.main}>
+      <Helmet>
+        <title>JetBrains Licensee</title>
+      </Helmet>
       <main className="px-6 z-grid py-10">
         {pluginList.map((product) => (
           <article
@@ -325,8 +292,8 @@ const JetBrains = () => {
                 return true;
               }}
               initialValues={{
-                licenseeName: 'Leroy',
-                assigneeName: 'Leroy',
+                licenseeName: 'leroy',
+                assigneeName: 'leroy20317',
                 expiryDate: '2026-12-31',
               }}
             >

@@ -66,13 +66,13 @@
     "icon": "icon-ds"
   },
   {
-    "id": 12,
+    "id": 11461,
     "name": "dotCover",
     "code": "DC",
     "icon": "icon-dc"
   },
   {
-    "id": 13,
+    "id": 11462,
     "name": "dotTrace",
     "code": "DPN,DP",
     "icon": "icon-dpn"
