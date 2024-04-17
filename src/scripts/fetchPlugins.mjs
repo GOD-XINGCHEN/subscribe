@@ -5,7 +5,8 @@
  */
 
 import axios from 'axios';
-import plugins from '../assets/plugins.json' assert { type: 'json' };
+import plugins from '../utils/plugins.json' assert { type: 'json' };
+import products from '../utils/products.json' assert { type: 'json' };
 import fs from 'fs-extra';
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
@@ -22,10 +23,10 @@ const [paid, freemium] = await Promise.all(
       params: { pricingModels: type, max: 1000, offset: 0 },
     });
 
-    return res.data.plugins.map((plugin) => ({
+    return res.data.plugins.filter(ele => products.findIndex(product => product.id === ele.id) < 0).map((plugin) => ({
       id: plugin.id,
       name: plugin.name,
-      pricingModel: plugin.pricingModel,
+      link: `${pluginBaseUrl}${plugin.link}`,
       icon: plugin.icon ? `${pluginBaseUrl}${plugin.icon}` : '',
       code: '',
     }));
@@ -39,6 +40,5 @@ for (const product of list) {
     (await axios.get(`${pluginBaseUrl}/api/plugins/${product.id}`)).data.purchaseInfo.productCode;
   pluginList.push({ ...product, code });
 }
-console.log('pluginList', pluginList, resolve(__dirname,'../assets/pluginList.json'));
 
-fs.writeJson(resolve(__dirname,'../assets/pluginList.json'), pluginList.sort((a, b) => a.id - b.id), { spaces: 2 });
+fs.writeJson(resolve(__dirname,'../utils/plugins.json'), pluginList.sort((a, b) => a.id - b.id), { spaces: 2 });

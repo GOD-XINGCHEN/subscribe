@@ -3,106 +3,52 @@
  * @date: 2024-04-16 11:51
  * @description：jetbra
  */
-import plugins from '@/assets/plugins.json';
-import products from '@/assets/products.json';
+import { equal, pemEncodedCrt, pemEncodedKey } from '@/utils/jetbra';
+import plugins from '@/utils/plugins.json';
+import products from '@/utils/products.json';
+import { CheckOutlined, CopyOutlined, DownOutlined } from '@ant-design/icons';
 import {
   ModalForm,
   ProFormDatePicker,
   ProFormInstance,
   ProFormText,
 } from '@ant-design/pro-components';
-import { ConfigProvider, theme } from 'antd';
+import { useDebounce } from 'ahooks';
+import {
+  Button,
+  Collapse,
+  ConfigProvider,
+  FloatButton,
+  Input,
+  message,
+  theme,
+  Typography,
+} from 'antd';
+import copyToClipboard from 'copy-to-clipboard';
 import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'umi';
 import styles from './jetbra.less';
 
-const pemEncodedKey = `-----BEGIN PRIVATE KEY-----
-MIIJQgIBADANBgkqhkiG9w0BAQEFAASCCSwwggkoAgEAAoICAQC3p6nBj9mcRpGK
-pigPXOB83/PmA9bJr5jsSo3fm5ky67rTP4V79XI9a1t/5asg7XQ5OyulvP0w6tQk
-axLfg6Opd9A8YQIgt+Gh/A5hsIKu+8RKC4prx+S6Xj8X5RfrWwdUWbRYBQziGC3U
-kGihR9iQ4FSsYS4ld0uo54j4ZArVlq07PhOr6uDdeQZtzZzOQCSC6o7VGzozX2sV
-aukazqE3NEdxaqqOsr8aP/iWGtlJxyAvq9nWyrgyzFK7YJ8nRFHSTV9Mx/RbXHRC
-76+PLnPZmNN/E1lLGVCtaZ0G8QNmz8gOKp2CfSL1IDui7S17xhZtd+2EDEtTeNQB
-wwTq8KDSPFKA1/qiN6zPem4hThb5+xHZMu6wcs8m7dx/s8XaI3476S9RNDTvfAU/
-c37nxwGgMWbZZgzruSwyXtwhrq58kTERMW7XPkI5dZlIerRuJWpAMHbKMa8tBnRu
-9smmMm/Yred5GhZLP0/7O2e20Sc1Rc0A1dWOG81LZON7yptr87QVZUJAZGWOX9iW
-3uSIN2/LMEMwZzk9Jqy+Uj1IcJkOiMZBFs7Y+eThLowTJka/dqBErqvWWDGni4nS
-llUd//vhwPAUWWkRhCrUh2QmxRBXYoQ8cSb/V4ejbk/3sCeh2KftDUKRZ1Jye9p/
-MFfrbnaWpu2inHc1Zs+3DcDoRti7OwIDAQABAoICABM991zG6BtmD2ix+P+HESQ0
-SLcgTthJ1CFpvEyh3l7F8QiiHqe6szH5NhiD5TapemRmrS+LyhFegUShjVQq1DJ0
-0bYJyfHIolTY9l7I4iBYU5wYcnPReUcHid/EiomHu5BcZ7dTLCLiOqcLTFMdlnSz
-dFutQOr/AUfcnm67+KChTVwoKGJ6VP4PaJuHj/bSJKEs1zM/y4zHYg5X6b17ycth
-aFzbOqyB0OD8s9xySrLesKIeBNBq4/q6iq6ENJimIVaB8cq3JoSN/sZmm4PKb6vs
-RbiKO/BQ4jGRH7ky9lLG0WSelWsvFkMNkgIDjKDrw7zLdHDB4wCHZ9sZZkIBXTAL
-6ktSBFq2IMuyn3C6hhbYWHADOo7x/RStk88/sGF39TYSsK+76QuRQ8SBdvzlHS+e
-CNCJMIhZUHSUCn10mo17V6MDV/lXMuajSLlxzSsKxjzxFQxswIMCtEaxFMvqokZw
-pyZdsYs5aZGAaRQ0fBbCsVAR1neki5Z7hhChBFOf5DuMbU3djD6/efoqhyhscruD
-Vb8r2bslL244830ZhX3yJRKiyxvKNPvquuzORIG7BHi9kucU60zMrXZ8tGC2W07+
-KtPKxTc6SVe5QiPDUsi5okyM0qQJ/5oLxNaD9vOV2wCIKmfKotgC42svITDNLkvJ
-6nLFYUELHQcqVHlsmwW1AoIBAQD50eyXAk4FwlBxWDO8zJush7J3pRMPndWMDoL1
-5XEPCzENEz8FZoBCNCup6CSUSL8WjnOVrMyBRQgWfZhB7u2T3NBRsMLt66RCu2L5
-BjZHRi6F3nuIS9Xfs7CNi9D2tcI/FT7xPe3AEgJKuGIKaySUip1Q+dAAh3XyPlco
-1EPYpPJAY+FnYNStcBHLXa2v+v212GCMGB9WLhegBWt+FWjn/tMyqJifUIQy7M7k
-5dCLO6kmo0VPWMngspUPcX77JtJLOA/JgeBAO91uDJMWHelPS2zIkPZb3pG8L+yz
-K33Ry+YY0SUqzBLFfQmD6HWz7sivcv2aCHD0PcY8GcCQxAJNAoIBAQC8Mrl8w7vE
-LMDvbiAMoK6iYJr0FbFGoiDfJhLU5MkIRRv5439qtXmF3EVFcQTsXf6km0U/YaYq
-/e4b44YCjIQDiD/LJPjZThHiCyYduNl9RUeVYbAubtBK7MJ2KQxNVfG2XOYJmxg1
-j5/McX5v5JA+bTdtRp0OH0OYPiA/ilM2+Gp1m/qOD85OS+Z1Np+jNQ0UXY7LYZP3
-NbFdBRnil1obeZKxqOxdAuate+cioKrvHRvbHLF6GNWde9+f8q+2cfNZijyJwE6R
-vURwDCwdNUaPCTtc7s9NSP2WNHaOM4pkmlu6mgZl2PLzZimUCeev8EovGH3VAMl3
-i2ytNEJ+56enAoIBAQDGbZaFj6AXdPNeRBe8M6zHCnWYEPcl5VEUUQZ2eAsoTtRk
-NVBOYs8nRrcT2r8LRQj6yqVGUp2RZBp7esDwRe5RDwgsisEaJ5wuIRcJA4UjcbxM
-Op5WcR3s9JYcp9yPyWkDoEWBapYohGVroi7FZbsFfWBdTD+J3A60Hg4u8QL+1m1Q
-9cS4zzG+nRCVPtBRwoO456gwPozNcAj14rgxyqGr/D0WtNGdYV/P70aai2vs27OM
-bA0GbFjVcCNzw8t/g6NveZUYkl9jxekomzZNT+7cO+WpHXOBHzUUi+Bvo/DpLhKS
-zbS+3J9gW+Ot8XtkMxsWOLj0mxXU+ig13qKUmgvVAoIBAB2k08jOP/5HmmBcdVnn
-2XokQ2QdIp5gnVLo+WBlZTETSbPT3NcfHLQ0HQkyIzdkGt8swfyY0gbFlsL31L0E
-CytPQ9UozrXT8UcswGVAH6n2xq7GA21c8RxMLNlV3+Uym29BNM7gijCtndsjKWpQ
-k1Px+iARVl3KGOibKJM5o5/uAz7hQdcssC9vDy75Wq3nhlbl4b8xcJAo+fYP/qLN
-elkHjk7Dr+96rIE5GhA/RI2DhUa/P0lfLg6vW2sjXAAd9Nnux1hfXUDhki0gDbbQ
-FHwlVR9vUmH3FFKbku0VO0BbfAVpi4ZxZNtoBTaXVNJGxDik3/U0OYfGA2lI6Qx6
-StMCggEAV1XytpdVbCAlPitA5mkncFXXW6YhRufmkmzbYeTboPzYlNz9F2xmYjIo
-xNfzwiGepHyG38YdgNJ/h1NNo4a7JCLKRPReRca1V+td9BP7ZKAQEHAtAY6QwHJ1
-aJzZxmcohMWh9LXmUzeSnSIMbG/JNqIwy6W6EMmzC5eXL9FHaWCr3WQs05wE+CJF
-pJkXbmXkg+rbct9hAYKVw7zQjezTbfRPqcHdsHVOJBZCTbCSm44XWnLuu90jQ2Ku
-pTOTmM3h0mKOG8tVTaibJdeNHzk0+SDhUdOI5ORA0Q+iHZaEbPO39/c+sr0n9xLF
-17M9lCizO9o9dONdHsHfNQi6y9Jcnw==
------END PRIVATE KEY-----`;
-
-const pemEncodedCrt = `-----BEGIN CERTIFICATE-----
-MIIEtTCCAp2gAwIBAgIUDyuccmylba71lZQAQic5TJiAhwwwDQYJKoZIhvcNAQEL
-BQAwGDEWMBQGA1UEAwwNSmV0UHJvZmlsZSBDQTAeFw0yMzA5MjkxNDA2MTJaFw0z
-MzA5MjcxNDA2MTJaMBExDzANBgNVBAMMBk5vdmljZTCCAiIwDQYJKoZIhvcNAQEB
-BQADggIPADCCAgoCggIBALenqcGP2ZxGkYqmKA9c4Hzf8+YD1smvmOxKjd+bmTLr
-utM/hXv1cj1rW3/lqyDtdDk7K6W8/TDq1CRrEt+Do6l30DxhAiC34aH8DmGwgq77
-xEoLimvH5LpePxflF+tbB1RZtFgFDOIYLdSQaKFH2JDgVKxhLiV3S6jniPhkCtWW
-rTs+E6vq4N15Bm3NnM5AJILqjtUbOjNfaxVq6RrOoTc0R3Fqqo6yvxo/+JYa2UnH
-IC+r2dbKuDLMUrtgnydEUdJNX0zH9FtcdELvr48uc9mY038TWUsZUK1pnQbxA2bP
-yA4qnYJ9IvUgO6LtLXvGFm137YQMS1N41AHDBOrwoNI8UoDX+qI3rM96biFOFvn7
-Edky7rByzybt3H+zxdojfjvpL1E0NO98BT9zfufHAaAxZtlmDOu5LDJe3CGurnyR
-MRExbtc+Qjl1mUh6tG4lakAwdsoxry0GdG72yaYyb9it53kaFks/T/s7Z7bRJzVF
-zQDV1Y4bzUtk43vKm2vztBVlQkBkZY5f2Jbe5Ig3b8swQzBnOT0mrL5SPUhwmQ6I
-xkEWztj55OEujBMmRr92oESuq9ZYMaeLidKWVR3/++HA8BRZaRGEKtSHZCbFEFdi
-hDxxJv9Xh6NuT/ewJ6HYp+0NQpFnUnJ72n8wV+tudpam7aKcdzVmz7cNwOhG2Ls7
-AgMBAAEwDQYJKoZIhvcNAQELBQADggIBAIdeaQfKni7tXtcywC3zJvGzaaj242pS
-WB1y40HW8jub0uHjTLsBPX27iA/5rb+rNXtUWX/f2K+DU4IgaIiiHhkDrMsw7piv
-azqwA9h7/uA0A5nepmTYf/HY4W6P2stbeqInNsFRZXS7Jg4Q5LgEtHKo/H8USjtV
-w9apmE3BCElkXRuelXMsSllpR/JEVv/8NPLmnHSY02q4KMVW2ozXtaAxSYQmZswy
-P1YnBcnRukoI4igobpcKQXwGoQCIUlec8LbFXYM9V2eNCwgABqd4r67m7QJq31Y/
-1TJysQdMH+hoPFy9rqNCxSq3ptpuzcYAk6qVf58PrrYH/6bHwiYPAayvvdzNPOhM
-9OCwomfcazhK3y7HyS8aBLntTQYFf7vYzZxPMDybYTvJM+ClCNnVD7Q9fttIJ6eM
-XFsXb8YK1uGNjQW8Y4WHk1MCHuD9ZumWu/CtAhBn6tllTQWwNMaPOQvKf1kr1Kt5
-etrONY+B6O+Oi75SZbDuGz7PIF9nMPy4WB/8XgKdVFtKJ7/zLIPHgY8IKgbx/VTz
-6uBhYo8wOf3xzzweMnn06UcfV3JGNvtMuV4vlkZNNxXeifsgzHugCvJX0nybhfBh
-fIqVyfK6t0eKJqrvp54XFEtJGR+lf3pBfTdcOI6QFEPKGZKoQz8Ck+BC/WBDtbjc
-/uYKczZ8DKZu
------END CERTIFICATE-----`;
-
+const defaultList = [...products, ...plugins];
 const JetBrains = () => {
-  const [pluginList] = useState([...products, ...plugins] || []);
+  const [list, setList] = useState(defaultList);
   const [openModal, setOpenModal] = useState(false);
+  const [copyEqual, setCopyEqual] = useState(false);
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, { wait: 200 });
   const form = useRef<ProFormInstance>();
+
+  useEffect(() => {
+    if (debouncedSearch) {
+      const result = defaultList.filter(
+        (item) => item.name.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1,
+      );
+      setList(result);
+      return;
+    }
+    setList(defaultList);
+  }, [debouncedSearch]);
 
   const checkLicense = () => {
     if (!localStorage.getItem('licenseInfo')) {
@@ -204,71 +150,111 @@ const JetBrains = () => {
     );
     let cert_base64 = pem2base64(pemEncodedCrt);
 
-    navigator.clipboard
-      .writeText(`${licenseId}-${licensePartBase64}-${sigResultsBase64}-${cert_base64}`)
-      .then(() => {
-        alert('The activation code has been copied to your clipboard');
-      });
+    copyToClipboard(`${licenseId}-${licensePartBase64}-${sigResultsBase64}-${cert_base64}`);
+    message.success('The activation code has been copied to your clipboard');
   };
+
   return (
-    <div className={styles.main}>
-      <Helmet>
-        <title>JetBrains Licensee</title>
-      </Helmet>
-      <main className="px-6 z-grid py-10">
-        {pluginList.map((product) => (
-          <article
-            key={product.id}
-            className="card"
-            data-product={product.name}
-            data-product-codes={product.code}
-          >
-            <header>
-              <div className="flex items-center justify-between px-6 pt-1 pb-0 bg-card radius-1">
-                <div className="avatar-wrapper flex items-center justify-center overflow-hidden shrink-0">
-                  {/http(s)?:\/\//.test(product.icon) ? (
-                    <div
-                      className="icon"
-                      role="img"
-                      style={{ backgroundImage: `url('${product.icon}')` }}
-                    ></div>
-                  ) : (
-                    <div className={`icon ${product.icon}`} role="img"></div>
-                  )}
-                </div>
-              </div>
-              <hr />
-            </header>
-            <div className="pd-6 overflow-hidden bg-card container radius-1">
-              <h1
-                className="truncate truncate-1 color-primary mt-0 overflow-ellipsis"
-                title={product.name}
-              >
-                {product.name}
-              </h1>
-              <p
-                title="Click to copy full license text"
-                className="truncate text-sm text-grey"
-                onClick={() => copyLicense(product.code)}
-                data-content="Copy to clipboard"
-              >
-                *********************************************************************************************************************************************************
-              </p>
-            </div>
-            <div className="mask"></div>
-            <div className="mask mask-c-1"></div>
-          </article>
-        ))}
-      </main>
-      <footer className="flex items-center justify-between">
-        <div className="text-sm text-grey">Theme</div>
-        <div className="text-sm text-grey">
+    <ConfigProvider
+      theme={{
+        // 1. 单独使用暗色算法
+        algorithm: theme.darkAlgorithm,
+      }}
+    >
+      <div className={styles.main}>
+        <Helmet>
+          <title>JetBrains Licensee</title>
+        </Helmet>
+        <ul className={styles.alert}>
+          <Collapse
+            bordered={false}
+            ghost
+            expandIconPosition="end"
+            expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 180 : 0} />}
+            items={[
+              {
+                key: '1',
+                label: (
+                  <li style={{ marginBottom: 0 }}>
+                    <strong style={{ fontSize: 18 }}>Explanation</strong>
+                  </li>
+                ),
+                children: (
+                  <>
+                    <li>
+                      1. Add new parameters under ja-netfilter -&gt; power.conf -&gt; [Result]
+                      <div className={styles.equal}>
+                        <span className={styles.text}>{equal}</span>
+                        <span className={styles.copy}>
+                          {copyEqual ? (
+                            <CheckOutlined className={styles.success} />
+                          ) : (
+                            <CopyOutlined
+                              onClick={() => {
+                                copyToClipboard(equal);
+                                setCopyEqual(true);
+                                setTimeout(() => {
+                                  setCopyEqual(false);
+                                }, 5000);
+                              }}
+                            />
+                          )}
+                        </span>
+                      </div>
+                    </li>
+                    <li>
+                      2. Or Download
+                      <ConfigProvider
+                        theme={{
+                          components: {
+                            Typography: {
+                              colorLink: '#69b1ff',
+                              colorLinkHover: '#69b1ff',
+                              linkHoverDecoration: 'underline',
+                            },
+                          },
+                        }}
+                      >
+                        <Typography.Link
+                          download
+                          href="/static/ja-netfilter.zip"
+                          style={{ marginLeft: 8, fontSize: 16 }}
+                        >
+                          ja-netfilter.zip
+                        </Typography.Link>
+                      </ConfigProvider>
+                    </li>
+                  </>
+                ),
+              },
+            ]}
+          />
+        </ul>
+
+        <div className={styles.actions}>
+          <strong>Search By Name</strong>
           <ConfigProvider
             theme={{
-              // 1. 单独使用暗色算法
-              algorithm: theme.darkAlgorithm,
+              token: {
+                colorPrimary: '#d9d9d9',
+              },
             }}
           >
+            <Input
+              style={{ width: 300, margin: '0 16px' }}
+              placeholder=""
+              allowClear
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+            />
+          </ConfigProvider>
+          <span>
+            <strong>IDE Tools: </strong> {products.length}，<strong>Plugin: </strong>
+            {plugins.length}
+          </span>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'end' }}>
             <ModalForm<{
               licenseeName: string;
               assigneeName: string;
@@ -276,7 +262,19 @@ const JetBrains = () => {
             }>
               title="Create Licensee"
               formRef={form}
-              trigger={<button className="jetbra-button">Refill licensee information</button>}
+              trigger={
+                <span>
+                  <ConfigProvider
+                    theme={{
+                      token: {
+                        colorPrimary: '#d9d9d9',
+                      },
+                    }}
+                  >
+                    <Button>Fill Licensee Info</Button>
+                  </ConfigProvider>
+                </span>
+              }
               autoFocusFirstInput
               modalProps={{
                 destroyOnClose: true,
@@ -307,11 +305,70 @@ const JetBrains = () => {
                 transform={(value) => (value ? dayjs(value).format('YYYY-MM-DD') : '')}
               />
             </ModalForm>
-          </ConfigProvider>
+          </div>
         </div>
-        <div className="text-sm text-grey">Copy from ja-netfilter</div>
-      </footer>
-    </div>
+        <main className="px-6 z-grid">
+          {list.map((product) => (
+            <article key={product.id} className="card">
+              <header>
+                <div className="flex items-center justify-between px-6 pt-1 pb-0 bg-card radius-1">
+                  <div className="avatar-wrapper flex items-center justify-center overflow-hidden shrink-0">
+                    {/http(s)?:\/\//.test(product.icon) ? (
+                      <div
+                        className="icon"
+                        role="img"
+                        style={{ backgroundImage: `url('${product.icon}')` }}
+                      ></div>
+                    ) : (
+                      <div className={`icon ${product.icon}`} role="img"></div>
+                    )}
+                  </div>
+
+                  {product.link && (
+                    <ConfigProvider
+                      theme={{
+                        token: {
+                          colorPrimary: '#d9d9d9',
+                        },
+                      }}
+                    >
+                      <Button
+                        className="link"
+                        href={product.link}
+                        target="_blank"
+                        rel="noreferrer nofollow"
+                      >
+                        Desc
+                      </Button>
+                    </ConfigProvider>
+                  )}
+                </div>
+                <hr />
+              </header>
+              <div className="pd-6 overflow-hidden bg-card container radius-1">
+                <h1
+                  className="truncate truncate-1 color-primary mt-0 overflow-ellipsis"
+                  title={product.name}
+                >
+                  {product.name}
+                </h1>
+                <p
+                  title="Click to copy full license text"
+                  className="truncate text-sm text-grey"
+                  onClick={() => copyLicense(product.code)}
+                  data-content="Copy to clipboard"
+                >
+                  *********************************************************************************************************************************************************
+                </p>
+              </div>
+              <div className="mask"></div>
+              <div className="mask mask-c-1"></div>
+            </article>
+          ))}
+        </main>
+        <FloatButton.BackTop visibilityHeight={500} />
+      </div>
+    </ConfigProvider>
   );
 };
 

@@ -6,6 +6,7 @@
 .main{
   min-height: 100vh;
   background-color: var(--main-bg);
+  padding: 4px;
 
   --spacing: 4px;
   --size: 64px;
@@ -51,14 +52,6 @@
       background-color: #057e47;
       color: white;
     }
-    .form {
-      background-color: #15172b;
-      border-radius: 20px;
-      box-sizing: border-box;
-      height: 500px;
-      padding: 20px;
-      width: 320px;
-    }
 
     .title {
       color: #eee;
@@ -74,97 +67,6 @@
       font-size: 16px;
       font-weight: 600;
       margin-top: 10px;
-    }
-
-    .input-container {
-      height: 50px;
-      position: relative;
-      width: 100%;
-    }
-
-    .ic1 {
-      margin-top: 40px;
-    }
-
-    .ic2 {
-      margin-top: 30px;
-    }
-
-    .input {
-      background-color: #303245;
-      border-radius: 12px;
-      border: 0;
-      box-sizing: border-box;
-      color: #eee;
-      font-size: 18px;
-      height: 100%;
-      outline: 0;
-      padding: 4px 20px 0;
-      width: 100%;
-    }
-
-    .cut {
-      background-color: #15172b;
-      border-radius: 10px;
-      height: 20px;
-      left: 20px;
-      position: absolute;
-      top: -20px;
-      transform: translateY(0);
-      transition: transform 200ms;
-      width: 76px;
-    }
-
-    .cut-short {
-      width: 50px;
-    }
-
-    .input:focus ~ .cut,
-    .input:not(:placeholder-shown) ~ .cut {
-      transform: translateY(8px);
-    }
-
-    .placeholder {
-      color: #65657b;
-      font-family: sans-serif;
-      left: 20px;
-      line-height: 14px;
-      pointer-events: none;
-      position: absolute;
-      transform-origin: 0 50%;
-      transition: transform 200ms, color 200ms;
-      top: 20px;
-    }
-
-    .input:focus ~ .placeholder,
-    .input:not(:placeholder-shown) ~ .placeholder {
-      transform: translateY(-30px) translateX(10px) scale(0.75);
-    }
-
-    .input:not(:placeholder-shown) ~ .placeholder {
-      color: #808097;
-    }
-
-    .input:focus ~ .placeholder {
-      color: #dc2f55;
-    }
-
-    .submit {
-      background-color: #08d;
-      border-radius: 12px;
-      border: 0;
-      box-sizing: border-box;
-      color: #eee;
-      cursor: pointer;
-      font-size: 18px;
-      height: 50px;
-      margin-top: 38px;
-      text-align: center;
-      width: 100%;
-    }
-
-    .submit:active {
-      background-color: #06b;
     }
 
     .color-primary {
@@ -272,6 +174,13 @@
 
     .card:hover {
       transform: translateY(-2px);
+    }
+
+    .link{
+      display: none;
+    }
+    .card:hover .link {
+      display: block;
     }
 
     .card:hover .mask {
@@ -492,4 +401,91 @@
     }
 
   }
+  .alert{
+    margin: 20px calc(var(--spacing) * 6 + 1rem) 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 8px 8px 20px;
+
+    li{
+      list-style: none;
+      margin-bottom: 16px;
+      font-size: 16px;
+      color: var(--text-main);
+    }
+
+    ::-webkit-scrollbar {
+      box-sizing: border-box;
+      width: 5px;
+      height: 5px;
+    }
+
+    ::-webkit-scrollbar-corner {
+      background-color: #f1f1f1;
+      -webkit-border-radius: 1px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      // background-color: #e7e7e7;
+      background-color: #c4cbd3;
+      // border:1px solid rgba(0, 0, 0, 0.21);
+      -webkit-border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      // background-color: #f6f6f6;
+      background-color: #c4cbd3;
+      // border: 1px solid rgba(0, 0, 0, 0.21);
+    }
+
+    ::-webkit-scrollbar-track-piece {
+      background-color: transparent;
+      // background-color: rgba(0, 0, 0, 0.5);
+      -webkit-border-radius: 5px;
+    }
+
+    .equal{
+      width: 70%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      position: relative;
+      .text{
+        display: block;
+        white-space: nowrap;
+        overflow: auto;
+      }
+
+      &:hover .copy{
+        display: block;
+      }
+
+      .copy{
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 0 12px;
+        background: var(--card-bg);
+        color: var(--text-grey);
+        cursor: pointer;
+        border-radius: 0 5px 5px 0;
+        &:hover{
+          color: var(--text-main);
+        }
+        .success{
+          color: var(--text-main);
+        }
+      }
+
+    }
+  }
+  .actions{
+    display: flex;
+    align-items: center;
+    gap: 0 16px;
+    margin: 20px calc(var(--spacing) * 6 + 1rem) ;
+    color: var(--text-main);
+  }
+
 }

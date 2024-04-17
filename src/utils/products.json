@@ -3,84 +3,98 @@
     "id": 1,
     "name": "IntelliJ IDEA",
     "code": "II,PCWMP,PSI",
-    "icon": "icon-ii"
+    "icon": "icon-ii",
+    "link": "https://www.jetbrains.com/idea/"
   },
   {
     "id": 2,
     "name": "PhpStorm",
     "code": "PS,PCWMP,PSI",
-    "icon": "icon-ps"
+    "icon": "icon-ps",
+    "link": "https://www.jetbrains.com/phpstorm/"
   },
   {
     "id": 3,
     "name": "AppCode",
     "code": "AC,PCWMP,PSI",
-    "icon": "icon-ac"
+    "icon": "icon-ac",
+    "link": "https://www.jetbrains.com/objc/"
   },
   {
     "id": 4,
     "name": "DataGrip",
     "code": "DB,PSI,PDB",
-    "icon": "icon-db"
+    "icon": "icon-db",
+    "link": "https://www.jetbrains.com/datagrip/"
   },
   {
     "id": 5,
     "name": "RubyMine",
     "code": "RM,PCWMP,PSI",
-    "icon": "icon-rm"
+    "icon": "icon-rm",
+    "link": "https://www.jetbrains.com/ruby/"
   },
   {
     "id": 6,
     "name": "WebStorm",
     "code": "WS,PCWMP,PSI",
-    "icon": "icon-ws"
+    "icon": "icon-ws",
+    "link": "https://www.jetbrains.com/webstorm/"
   },
   {
     "id": 7,
     "name": "Rider",
     "code": "RD,PDB,PSI,PCWMP",
-    "icon": "icon-rd"
+    "icon": "icon-rd",
+    "link": "https://www.jetbrains.com/rider/"
   },
   {
     "id": 8,
     "name": "CLion",
     "code": "CL,PSI,PCWMP",
-    "icon": "icon-cl"
+    "icon": "icon-cl",
+    "link": "https://www.jetbrains.com/clion/"
   },
   {
     "id": 9,
     "name": "PyCharm",
     "code": "PC,PSI,PCWMP",
-    "icon": "icon-pc"
+    "icon": "icon-pc",
+    "link": "https://www.jetbrains.com/pycharm/"
   },
   {
     "id": 10,
     "name": "GoLand",
     "code": "GO,PSI,PCWMP",
-    "icon": "icon-go"
+    "icon": "icon-go",
+    "link": "https://www.jetbrains.com/go/"
   },
   {
     "id": 11,
     "name": "DataSpell",
     "code": "DS,PSI,PDB,PCWMP",
-    "icon": "icon-ds"
+    "icon": "icon-ds",
+    "link": "https://www.jetbrains.com/dataspell/"
   },
   {
     "id": 11461,
     "name": "dotCover",
     "code": "DC",
-    "icon": "icon-dc"
+    "icon": "icon-dc",
+    "link": "https://www.jetbrains.com/dotcover/"
   },
   {
     "id": 11462,
     "name": "dotTrace",
     "code": "DPN,DP",
-    "icon": "icon-dpn"
+    "icon": "icon-dpn",
+    "link": "https://www.jetbrains.com/dottrace/"
   },
   {
     "id": 14,
     "name": "dotMemory",
     "code": "DM",
-    "icon": "icon-dm"
+    "icon": "icon-dm",
+    "link": "https://www.jetbrains.com/dotmemory/"
   }
 ]
