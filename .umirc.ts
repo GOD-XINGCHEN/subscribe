@@ -11,4 +11,7 @@ export default defineConfig({
     // 解决首次加载时白屏的问题
     { src: `/static/scripts/loading.js`, async: true },
   ],
+  metas: [
+    { name: 'robots', content: 'noindex,nofollow' },
+  ],
 });
