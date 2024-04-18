@@ -16,6 +16,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const pluginBaseUrl = 'https://plugins.jetbrains.com';
+const pluginIconBaseUrl = 'https://downloads.marketplace.jetbrains.com';
 const pluginMap = new Map(plugins.map((plugin) => [plugin.id, plugin.code]));
 const [paid, freemium] = await Promise.all(
   ['PAID', 'FREEMIUM'].map(async (type) => {
@@ -27,7 +28,7 @@ const [paid, freemium] = await Promise.all(
       id: plugin.id,
       name: plugin.name,
       link: `${pluginBaseUrl}${plugin.link}`,
-      icon: plugin.icon ? `${pluginBaseUrl}${plugin.icon}` : '',
+      icon: plugin.icon ? `${pluginIconBaseUrl}${plugin.icon}` : '',
       code: '',
     }));
   }),

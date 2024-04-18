@@ -13,7 +13,7 @@ import {
   ProFormInstance,
   ProFormText,
 } from '@ant-design/pro-components';
-import { useDebounce } from 'ahooks';
+import { useDebounceFn } from 'ahooks';
 import {
   Button,
   Collapse,
@@ -27,28 +27,21 @@ import {
 import copyToClipboard from 'copy-to-clipboard';
 import dayjs from 'dayjs';
 import { useEffect, useRef, useState } from 'react';
+import LazyLoad, { forceCheck } from 'react-lazyload';
 import { Helmet } from 'umi';
 import styles from './jetbra.less';
 
 const defaultList = [...products, ...plugins];
+
 const JetBrains = () => {
   const [list, setList] = useState(defaultList);
   const [openModal, setOpenModal] = useState(false);
   const [copyEqual, setCopyEqual] = useState(false);
-  const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, { wait: 200 });
+  const [search, setSearch] = useState<string | undefined>(undefined);
   const form = useRef<ProFormInstance>();
-
-  useEffect(() => {
-    if (debouncedSearch) {
-      const result = defaultList.filter(
-        (item) => item.name.toLowerCase().indexOf(debouncedSearch.toLowerCase()) > -1,
-      );
-      setList(result);
-      return;
-    }
-    setList(defaultList);
-  }, [debouncedSearch]);
+  const { run: runForceCheck } = useDebounceFn(forceCheck, {
+    wait: 10,
+  });
 
   const checkLicense = () => {
     if (!localStorage.getItem('licenseInfo')) {
@@ -62,6 +55,16 @@ const JetBrains = () => {
   useEffect(() => {
     checkLicense();
   }, []);
+
+  useEffect(() => {
+    if (typeof search === 'undefined') return;
+    setList(
+      search
+        ? defaultList.filter((item) => item.name.toLowerCase().indexOf(search.toLowerCase()) > -1)
+        : defaultList,
+    );
+    runForceCheck();
+  }, [search]);
 
   const pem2base64 = (pem: string) => {
     return pem
@@ -90,10 +93,9 @@ const JetBrains = () => {
     licenseId,
     licenseeName,
     assigneeName,
-  }: { products: Record<'code' | 'fallbackDate' | 'paidUpTo', string>[] } & Record<
-    'licenseId' | 'licenseeName' | 'assigneeName',
-    string
-  >) => {
+  }: {
+    products: Record<'code' | 'fallbackDate' | 'paidUpTo', string>[];
+  } & Record<'licenseId' | 'licenseeName' | 'assigneeName', string>) => {
     return JSON.stringify({
       licenseId: licenseId,
       licenseeName: licenseeName,
@@ -128,30 +130,33 @@ const JetBrains = () => {
       licenseeName: licenseInfo.licenseeName,
       assigneeName: licenseInfo.assigneeName,
     });
+    try {
+      let privateKey = await window.crypto.subtle.importKey(
+        'pkcs8',
+        base64ToArrayBuffer(pem2base64(pemEncodedKey)),
+        {
+          name: 'RSASSA-PKCS1-v1_5',
+          hash: 'SHA-1',
+        },
+        true,
+        ['sign'],
+      );
 
-    let privateKey = await window.crypto.subtle.importKey(
-      'pkcs8',
-      base64ToArrayBuffer(pem2base64(pemEncodedKey)),
-      {
-        name: 'RSASSA-PKCS1-v1_5',
-        hash: 'SHA-1',
-      },
-      true,
-      ['sign'],
-    );
+      let licensePartBase64 = btoa(decodeURIComponent(encodeURIComponent(licensePartJson)));
+      let sigResultsBase64 = arrayBufferToBase64(
+        await window.crypto.subtle.sign(
+          'RSASSA-PKCS1-v1_5',
+          privateKey,
+          new TextEncoder().encode(licensePartJson),
+        ),
+      );
+      let cert_base64 = pem2base64(pemEncodedCrt);
 
-    let licensePartBase64 = btoa(decodeURIComponent(encodeURIComponent(licensePartJson)));
-    let sigResultsBase64 = arrayBufferToBase64(
-      await window.crypto.subtle.sign(
-        'RSASSA-PKCS1-v1_5',
-        privateKey,
-        new TextEncoder().encode(licensePartJson),
-      ),
-    );
-    let cert_base64 = pem2base64(pemEncodedCrt);
-
-    copyToClipboard(`${licenseId}-${licensePartBase64}-${sigResultsBase64}-${cert_base64}`);
-    message.success('The activation code has been copied to your clipboard');
+      copyToClipboard(`${licenseId}-${licensePartBase64}-${sigResultsBase64}-${cert_base64}`);
+      message.success('The activation code has been copied to your clipboard');
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -232,7 +237,7 @@ const JetBrains = () => {
         </ul>
 
         <div className={styles.actions}>
-          <strong>Search By Name</strong>
+          <strong>Search By Name：</strong>
           <ConfigProvider
             theme={{
               token: {
@@ -241,7 +246,7 @@ const JetBrains = () => {
             }}
           >
             <Input
-              style={{ width: 300, margin: '0 16px' }}
+              style={{ width: 300, margin: '0 12px' }}
               placeholder=""
               allowClear
               value={search}
@@ -251,7 +256,7 @@ const JetBrains = () => {
             />
           </ConfigProvider>
           <span>
-            <strong>IDE Tools: </strong> {products.length}，<strong>Plugin: </strong>
+            <strong>IDE Tools: </strong> {products.length}, <strong>Plugins: </strong>
             {plugins.length}
           </span>
           <div style={{ flex: 1, display: 'flex', justifyContent: 'end' }}>
@@ -262,6 +267,7 @@ const JetBrains = () => {
             }>
               title="Create Licensee"
               formRef={form}
+              requiredMark={false}
               trigger={
                 <span>
                   <ConfigProvider
@@ -295,11 +301,12 @@ const JetBrains = () => {
                 expiryDate: '2026-12-31',
               }}
             >
-              <ProFormText name="licenseeName" label="licenseeName" />
-              <ProFormText name="assigneeName" label="assigneeName" />
+              <ProFormText name="licenseeName" label="licenseeName" rules={[{ required: true }]} />
+              <ProFormText name="assigneeName" label="assigneeName" rules={[{ required: true }]} />
               <ProFormDatePicker
                 name="expiryDate"
                 label="expiryDate"
+                rules={[{ required: true }]}
                 fieldProps={{ style: { width: '100%' } }}
                 convertValue={(value) => (value ? dayjs(value) : '')}
                 transform={(value) => (value ? dayjs(value).format('YYYY-MM-DD') : '')}
@@ -307,63 +314,66 @@ const JetBrains = () => {
             </ModalForm>
           </div>
         </div>
+
         <main className="px-6 z-grid">
           {list.map((product) => (
-            <article key={product.id} className="card">
-              <header>
-                <div className="flex items-center justify-between px-6 pt-1 pb-0 bg-card radius-1">
-                  <div className="avatar-wrapper flex items-center justify-center overflow-hidden shrink-0">
-                    {/http(s)?:\/\//.test(product.icon) ? (
-                      <div
-                        className="icon"
-                        role="img"
-                        style={{ backgroundImage: `url('${product.icon}')` }}
-                      ></div>
-                    ) : (
-                      <div className={`icon ${product.icon}`} role="img"></div>
+            <LazyLoad
+              key={product.id}
+              height={265}
+              placeholder={<div className="card" style={{ height: 256 }} />}
+            >
+              <article className="card">
+                <header>
+                  <div className="flex items-center justify-between px-6 pt-1 pb-0 bg-card radius-1">
+                    <div className="avatar-wrapper flex items-center justify-center overflow-hidden shrink-0">
+                      {/http(s)?:\/\//.test(product.icon) ? (
+                        <img style={{ width: 64 }} src={product.icon} loading="lazy" />
+                      ) : (
+                        <div className={`icon ${product.icon}`} role="img"></div>
+                      )}
+                    </div>
+
+                    {product.link && (
+                      <ConfigProvider
+                        theme={{
+                          token: {
+                            colorPrimary: '#d9d9d9',
+                          },
+                        }}
+                      >
+                        <Button
+                          className="link"
+                          href={product.link}
+                          target="_blank"
+                          rel="noreferrer nofollow"
+                        >
+                          Desc
+                        </Button>
+                      </ConfigProvider>
                     )}
                   </div>
-
-                  {product.link && (
-                    <ConfigProvider
-                      theme={{
-                        token: {
-                          colorPrimary: '#d9d9d9',
-                        },
-                      }}
-                    >
-                      <Button
-                        className="link"
-                        href={product.link}
-                        target="_blank"
-                        rel="noreferrer nofollow"
-                      >
-                        Desc
-                      </Button>
-                    </ConfigProvider>
-                  )}
+                  <hr />
+                </header>
+                <div className="pd-6 overflow-hidden bg-card container radius-1">
+                  <h1
+                    className="truncate truncate-1 color-primary mt-0 overflow-ellipsis"
+                    title={product.name}
+                  >
+                    {product.name}
+                  </h1>
+                  <p
+                    title="Click to copy full license text"
+                    className="truncate text-sm text-grey"
+                    onClick={() => copyLicense(product.code)}
+                    data-content="Copy to clipboard"
+                  >
+                    *********************************************************************************************************************************************************
+                  </p>
                 </div>
-                <hr />
-              </header>
-              <div className="pd-6 overflow-hidden bg-card container radius-1">
-                <h1
-                  className="truncate truncate-1 color-primary mt-0 overflow-ellipsis"
-                  title={product.name}
-                >
-                  {product.name}
-                </h1>
-                <p
-                  title="Click to copy full license text"
-                  className="truncate text-sm text-grey"
-                  onClick={() => copyLicense(product.code)}
-                  data-content="Copy to clipboard"
-                >
-                  *********************************************************************************************************************************************************
-                </p>
-              </div>
-              <div className="mask"></div>
-              <div className="mask mask-c-1"></div>
-            </article>
+                <div className="mask"></div>
+                <div className="mask mask-c-1"></div>
+              </article>
+            </LazyLoad>
           ))}
         </main>
         <FloatButton.BackTop visibilityHeight={500} />
