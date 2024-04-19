@@ -246,7 +246,7 @@ const JetBrains = () => {
             }}
           >
             <Input
-              style={{ width: 300, margin: '0 12px' }}
+              style={{ width: 300, margin: '0 12px 0 0' }}
               placeholder=""
               allowClear
               value={search}
