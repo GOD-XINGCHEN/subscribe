@@ -187,7 +187,8 @@ const JetBrains = () => {
                 children: (
                   <>
                     <li>
-                      1. Add new parameters under ja-netfilter -&gt; power.conf -&gt; [Result]
+                      1. Add new parameters under ja-netfilter -&gt; config-jetbrains -&gt;
+                      power.conf -&gt; [Result]
                       <div className={styles.equal}>
                         <span className={styles.text}>{equal}</span>
                         <span className={styles.copy}>
