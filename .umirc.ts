@@ -13,5 +13,6 @@ export default defineConfig({
   ],
   metas: [
     { name: 'robots', content: 'noindex,nofollow' },
+    {name: 'referrer', content: 'never'},
   ],
 });

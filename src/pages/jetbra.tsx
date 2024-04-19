@@ -327,7 +327,11 @@ const JetBrains = () => {
                   <div className="flex items-center justify-between px-6 pt-1 pb-0 bg-card radius-1">
                     <div className="avatar-wrapper flex items-center justify-center overflow-hidden shrink-0">
                       {/http(s)?:\/\//.test(product.icon) ? (
-                        <img style={{ width: 64 }} src={product.icon} loading="lazy" />
+                        <img
+                          style={{ width: 64 }}
+                          src={product.icon}
+                          referrerPolicy="no-referrer"
+                        />
                       ) : (
                         <div className={`icon ${product.icon}`} role="img"></div>
                       )}
